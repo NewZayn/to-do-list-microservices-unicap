@@ -1,5 +1,5 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# Docs para a ação de Deploy do Azure Web Apps: https://github.com/Azure/webapps-deploy
+# Mais GitHub Actions para Azure: https://github.com/Azure/actions
 
 name: Build and deploy JAR app to Azure Web App - To-do-List
 
@@ -14,22 +14,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Faz o checkout do repositório
       - uses: actions/checkout@v4
 
+      # Configura a versão do Java
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: 'java21'
-          distribution: 'microsoft'
+          java-version: '21'  # Use apenas o número da versão
+          distribution: 'temurin'  # Distribuição recomendada (pode ser 'adopt', 'zulu', etc.)
 
+      # Executa o build com Maven usando o Maven Wrapper
       - name: Build with Maven
-        run: mvn clean install
+        run: ./mvnw clean install
+        working-directory: ./demo  # Define o diretório de trabalho para 'demo'
 
+      # Faz upload do artefato JAR para o job de deploy
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: ./demo/target/*.jar  # Caminho ajustado para a pasta 'demo'
 
   deploy:
     runs-on: ubuntu-latest
@@ -38,14 +43,16 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
-  
+      id-token: write  # Necessário para solicitar o JWT
+
     steps:
+      # Faz download do artefato JAR do job de build
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
-      
+
+      # Faz login no Azure usando os segredos configurados
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -53,11 +60,14 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_5F5D01A5C7814794A5B1613EDE97D124 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BF9F1BB6467D4756B88730C542C748A8 }}
 
+      # Faz o deploy do artefato JAR para o Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'To-do-List'
-          slot-name: 'Production'
-          package: '*.jar'
+          app-name: 'To-do-List'  # Nome do seu Azure Web App
+          slot-name: 'Production'  # Slot de deploy, geralmente 'Production'
+          package: '**/*.jar'  # Caminho ajustado para localizar o JAR
+
+
           
