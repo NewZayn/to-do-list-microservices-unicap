@@ -17,12 +17,19 @@ jobs:
       # Faz o checkout do repositório
       - uses: actions/checkout@v4
 
+      # Configura o locale para UTF-8
+      - name: Set up locale
+        run: |
+          sudo locale-gen en_US.UTF-8
+          sudo update-locale LANG=en_US.UTF-8
+        shell: bash
+
       # Configura a versão do Java
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
           java-version: '21'  # Use apenas o número da versão ou '21.0.0'
-          distribution: 'temurin'  # Distribuição recomendada (temurin, zulu, corretto, etc.)
+          distribution: 'temurin'  # Distribuição recomendada
 
       # Executa o build com Maven usando o Maven Wrapper
       - name: Build with Maven
