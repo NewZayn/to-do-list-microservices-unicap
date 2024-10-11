@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '21'  # Use apenas o número da versão ou '21.0.0'
-          distribution: 'temurin'  # Distribuição recomendada
+          distribution: 'temurin'  # Distribuição recomendada (temurin, zulu, corretto, etc.)
 
       # Executa o build com Maven usando o Maven Wrapper
       - name: Build with Maven
@@ -69,5 +69,3 @@ jobs:
           slot-name: 'Production'  # Slot de deploy, geralmente 'Production'
           package: '**/*.jar'  # Caminho ajustado para localizar o JAR
 
-
-          
