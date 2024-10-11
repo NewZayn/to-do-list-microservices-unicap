@@ -21,8 +21,8 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: '21'  # Use apenas o número da versão
-          distribution: 'temurin'  # Distribuição recomendada (pode ser 'adopt', 'zulu', etc.)
+          java-version: '21'  # Use apenas o número da versão ou '21.0.0'
+          distribution: 'temurin'  # Distribuição recomendada
 
       # Executa o build com Maven usando o Maven Wrapper
       - name: Build with Maven
